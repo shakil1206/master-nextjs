@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Delete, Param, UsePipes, ValidationPipe, UseFilters, BadRequestException, UseGuards } from '@nestjs/common';
+import { LoggingInterceptor } from './interceptor/index';
+import { Controller, Get, Post, Body, Delete, Param, UsePipes, ValidationPipe, UseFilters, BadRequestException, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './interface/userInterface';
 import { UserDto, UserParamsDto } from './dto/user.dto';
@@ -6,6 +7,7 @@ import { HttpExceptionFilter } from './filter';
 import { AuthGuard } from './gurd';
 
 @Controller('users')
+@UseInterceptors(LoggingInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
