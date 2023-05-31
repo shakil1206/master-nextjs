@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Delete, Param, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param, UsePipes, ValidationPipe, UseFilters, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './interface/userInterface';
 import { UserDto, UserParamsDto } from './dto/user.dto';
+import { HttpExceptionFilter } from './filter';
 
 @Controller('users')
 export class UserController {
@@ -9,8 +10,18 @@ export class UserController {
 
   // Http get users
   @Get()
-  getUser(): User[] {
-    return this.userService.getUser();
+  getUsers(): User[] {
+    return this.userService.getUsers();
+  }
+
+  @Get('/:email')
+  @UseFilters(new HttpExceptionFilter())
+  async getUser(@Param() param: UserParamsDto): Promise<User> {
+    try {
+      return this.userService.getUser(param.email);
+    } catch (err) {
+      throw new BadRequestException(err.message)
+    }
   }
 
   // Http post users
@@ -22,8 +33,8 @@ export class UserController {
 
   // Http delete users
   @Delete('/:email')
-  deleteUser(@Param('email') params: UserParamsDto): User[] {
-    return this.userService.deleteUser(params.email)
+  deleteUser(@Param() param: UserParamsDto): User[] {
+    return this.userService.deleteUser(param.email)
   }
 
 }
