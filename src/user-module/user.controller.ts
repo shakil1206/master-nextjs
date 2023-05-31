@@ -1,26 +1,27 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './interface/userInterface';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
+  // Http get users
   @Get()
   getUser(): User[] {
     return this.userService.getUser();
   }
 
-  @Get('add-user')
-  addUser(): User {
-    return this.userService.addUser({
-      email: 'test@gmail.com',
-      username: 'Md Shakil Ahmed',
-    });
+  // Http post users
+  @Post()
+  addUser(@Body() user: User): User {
+    return this.userService.addUser(user);
   }
 
-  // @Post()
-  // getHelloPost(): string {
-  //   return this.userService.getHello();
-  // }
+  // Http delete users
+  @Delete('/:email')
+  deleteUser(@Param('email') email: string): User[] {
+    return this.userService.deleteUser(email)
+  }
+
 }
