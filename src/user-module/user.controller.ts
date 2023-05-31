@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Delete, Param, UsePipes, ValidationPipe, UseFilters, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param, UsePipes, ValidationPipe, UseFilters, BadRequestException, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './interface/userInterface';
 import { UserDto, UserParamsDto } from './dto/user.dto';
 import { HttpExceptionFilter } from './filter';
+import { AuthGuard } from './gurd';
 
 @Controller('users')
 export class UserController {
@@ -16,6 +17,7 @@ export class UserController {
 
   @Get('/:email')
   @UseFilters(new HttpExceptionFilter())
+  @UseGuards(new AuthGuard())
   async getUser(@Param() param: UserParamsDto): Promise<User> {
     try {
       return this.userService.getUser(param.email);
