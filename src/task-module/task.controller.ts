@@ -8,6 +8,14 @@ import { filter } from 'rxjs';
 export class TaskController {
   constructor(private readonly taskService: TaskService) { }
 
+
+  @Post()
+  @UsePipes(new ValidationPipe())
+  async createTask(@Body() task: TaskDto, @Res() res: Response) {
+    const data = await this.taskService.addTask(task);
+    return res.status(200).send(data)
+  }
+
   @Get(':id')
   @UsePipes(new ValidationPipe())
   async getTask(@Param() reqParam: TaskParamDto, @Res() res: Response) {
@@ -43,10 +51,4 @@ export class TaskController {
     return res.status(200).send(data);
   }
 
-  @Post()
-  @UsePipes(new ValidationPipe())
-  async createTask(@Body() task: TaskDto, @Res() res: Response) {
-    const data = await this.taskService.addTask(task);
-    return res.status(200).send(data)
-  }
 }
