@@ -8,7 +8,6 @@ export class TaskService {
 
   constructor(private readonly taskStoreService: TaskStoreService) { }
 
-
   public async addTask(task: Task): Promise<Task> {
     task.id = uuid()
     task.completed = false;
@@ -19,9 +18,17 @@ export class TaskService {
   }
 
   public async getTask(id: string): Promise<Task> {
-    // const task = this.tasks.filter(task => task.id === id);
-    // return task[0];
-    return this.taskStoreService.getTask(id);
+    const task = await this.taskStoreService.getTask(id);
+    return task;
+  }
+
+  public async deleteTask(id: string): Promise<Task[]> {
+    const task = await this.taskStoreService.deleteTask(id);
+    return task;
+  }
+  public async filterTask(filter: boolean, name: string): Promise<Task[]> {
+    const task = await this.taskStoreService.filterTask(filter, name);
+    return task;
   }
 
   public async getAllTask(): Promise<Task[]> {
