@@ -16,26 +16,30 @@ export class CustomerController {
     }
 
     @Get()
+    @UsePipes(new ValidationPipe())
     async getAllCustomer(@Res() res: Response) {
         const data = await this.customerService.getAllCustomer();
         res.status(HttpStatus.OK).json(data);
     }
 
-    @Get(':/customerId')
-    async getCustomerById(@Res() res: Response, @Param('id') id: string) {
+    @Get('/:customerId')
+    @UsePipes(new ValidationPipe())
+    async getCustomerById(@Res() res: Response, @Param('customerId') id: string) {
         const data = await this.customerService.getCustomer(id);
         res.status(HttpStatus.OK).json(data);
     }
 
-    @Delete(':/customerId')
-    async deleteCustomerById(@Res() res: Response, @Param('id') id: string) {
-        const data = await this.customerService.getCustomer(id);
+    @Delete('/:customerId')
+    @UsePipes(new ValidationPipe())
+    async deleteCustomerById(@Res() res: Response, @Param('customerId') id: string) {
+        const data = await this.customerService.removeCustomer(id);
         res.status(HttpStatus.OK).json(data);
     }
 
     @Put()
-    async updateCustomerById(@Res() res: Response, @Param('id') id: string) {
-        const data = await this.customerService.getCustomer(id);
+    @UsePipes(new ValidationPipe())
+    async updateCustomerById(@Res() res: Response, @Body() customerParam: CustomerDTO) {
+        const data = await this.customerService.updateCustomer(customerParam);
         res.status(HttpStatus.OK).json(data);
     }
 
